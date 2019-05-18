@@ -38,30 +38,74 @@ filterTableButton.on("click", function() {
     d3.event.preventDefault();
   
     // Select the input element
-    var inputDateForm = d3.select("#datetime"); 
-  
     // Get the value property of the input element
-    var inputDateValue = inputDateForm.property("value");
-  
-    if (inputDateValue != "" ){
-        tableData = data.filter(event => event.datetime === inputDateValue);
+    var dateValue = d3.select("#datetime").property("value");
+    //console.log(inputDateValue);
+    var cityName = d3.select("#cityname").property("value");
+    //console.log(inputCityName);
+    var stateValue = d3.select('#statename').property("value");
+    //console.log(stateValue);
+    var countryValue = d3.select('#countryname').property("value");
+    //console.log(countryValue);
+    var shapeValue = d3.select('#shapename').property("value");
+    //console.log(shapeValue);    
+
+    if (dateValue != "" ){
+        tableData = data.filter(event => event.datetime === dateValue);
+    } else {
+        tableData = data;
+    }
+
+    if (cityName != "" ){
+        tableData = tableData.filter(event => event.city === cityName);
     } else {
         tableData;
     }
 
+    if (stateValue != "" ){
+        tableData = tableData.filter(event => event.state === stateValue);
+    } else {
+        tableData;
+    }
+
+    if (countryValue != "" ){
+        tableData = tableData.filter(event => event.country === countryValue);
+    } else {
+        tableData;
+    }
+
+    if (shapeValue != "" ){
+        tableData = tableData.filter(event => event.shape === shapeValue);
+    } else {
+        tableData;
+    }
     populateTable();
 });  
 
 // Using multiple input tags and/or select dropdowns, 
 // write JavaScript code so the user can to set multiple filters and 
 // search for UFO sightings using the following criteria based on the table columns:
-// date/time
-// city
-// state
-// country
-// shape
+// city, state, country, shape
 
-var shapeOptions = ["one","two","three"];
-var shapeList = d3.select("#shape");
+// Populate the dropdown menus with unique values from the data
+
+var stateOptions = Array.from(new Set(data.map(item=>item.state)));
+stateOptions.unshift("");
+var stateList = d3.select("#statename");
+stateList.selectAll('option').data(stateOptions).enter()
+        .append('option').attr("value", function (d) { return d; }).text(function(d){ return d;});
+//console.log(stateOptions);
+
+var countryOptions = Array.from(new Set(data.map(item=>item.country)));
+countryOptions.unshift("");
+var countryList = d3.select("#countryname");
+countryList.selectAll('option').data(countryOptions).enter()
+        .append('option').attr("value", function (d) { return d; }).text(function(d){ return d;});
+//console.log(countryOptions);
+
+var shapeOptions = Array.from(new Set(data.map(item=>item.shape)));
+shapeOptions.unshift("");
+var shapeList = d3.select("#shapename");
 shapeList.selectAll('option').data(shapeOptions).enter()
-        .append('option').text(function(d){ return d;});
+        .append('option').attr("value", function (d) { return d; }).text(function(d){ return d;});
+//console.log(shapeOptions);
